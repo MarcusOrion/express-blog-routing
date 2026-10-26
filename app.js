@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+//Asset Statico
+app.use(express.static('public'));
 
 app.get ("/", (req, res) => {
     console.log('Ecco, ci sono riuscito!')
