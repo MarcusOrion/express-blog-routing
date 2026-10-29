@@ -10,7 +10,7 @@ app.use('/posts', postsRouter);
 // Middleware locali
 app.use(logger);
 
-app.get("/", (req, res) => { 
+app.get("/posts", (req, res) => {
 res.send('Hello World!')
 })
 
