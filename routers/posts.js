@@ -7,7 +7,7 @@ router.use(logger);
 router.get('/', (req, res) => {
 
     try {
-        const error = true;
+        const error = false;
     if (error) {
         throw new Error('Error quering on Database. Please, try later!')
     }
