@@ -1,6 +1,6 @@
 const fs = require('fs')
 function logger (req, res, next) {
-    const log = `${new Date().toLocaleString()} [${req.method}] ${req.originalUrl}`
+    const log = `${new Date().toLocaleString()} /n [${req.method}] /n ${req.originalUrl}`
     console.log(log)
     next();
     // Salvare i log in un file dedicato

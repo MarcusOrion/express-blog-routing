@@ -5,7 +5,16 @@ router.use(logger);
 
 // Index (READ)
 router.get('/', (req, res) => {
+
+    try {
+        const error = true;
+    if (error) {
+        throw new Error('Error quering on Database. Please, try later!')
+    }
     res.send('Lista dei post')
+    } catch (err) {
+        next(err)
+    }
 })
 
 // Show (READ)
