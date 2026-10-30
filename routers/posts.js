@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const logger = require('../middlewares/logger')
 router.use(logger);
+const connection = require('../data/db')
 
 // Index (READ)
 router.get('/', (req, res) => {
