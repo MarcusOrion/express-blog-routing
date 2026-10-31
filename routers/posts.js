@@ -5,17 +5,23 @@ router.use(logger);
 const connection = require('../data/db')
 
 // Index (READ)
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
 
     try {
         const error = false;
     if (error) {
         throw new Error('Error quering on Database. Please, try later!')
     }
-    res.send('Lista dei post')
+    // res.send('Lista dei post')
     } catch (err) {
         next(err)
     }
+
+    const sql = 'SELECT * FROM posts';
+    connection.query(sql, (err, results) => {
+        if (err) return next(err);
+        res.json(results)
+    })
 })
 
 // Show (READ)
