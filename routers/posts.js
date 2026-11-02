@@ -27,7 +27,18 @@ router.get('/', (req, res, next) => {
 // Show (READ)
 router.get('/:id', (req, res) => {
     const id = req.params.id;
-    res.send(`Dettagli post con id: ${id}`)
+
+    const sql = 'SELECT * FROM posts WHERE id=?'
+    connection.query(sql, [id], (err, results) => {
+        if (err) next(err);
+        if (results.affectedRows === 0) {
+            res.status(404).json({
+                error: 'Post not found'
+            })
+            return;
+        }
+        res.json(results[0]);
+    })
 })
 
 // Store (CREATE)
@@ -54,11 +65,10 @@ router.delete('/:id', (req, res, next) => {
     const sql = `SELECT FROM posts WHERE id=?`;
     connection.query(sql, [id], (err, results) => {
         if (err) return next(err);
-        console.log(results)
         // Gestione errore 404
         if (results.affectedRows === 0) {
             res.status(404).json({
-                error: 'Pizza not found'
+                error: 'Post not found'
             })
             return;
         }
