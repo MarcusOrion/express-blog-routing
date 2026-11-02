@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
     const sql = 'SELECT * FROM posts';
     connection.query(sql, (err, results) => {
         if (err) return next(err);
-        res.json(results)
+        res.json(results[0])
     })
 })
 
@@ -48,9 +48,23 @@ router.patch('/:id', (req, res) => {
 })
 
 // Destroy (DELETE)
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    res.send(`Eliminazione del post con id: ${id}`)
+router.delete('/:id', (req, res, next) => {
+    const {id} = req.params;
+
+    const sql = `SELECT FROM posts WHERE id=?`;
+    connection.query(sql, [id], (err, results) => {
+        if (err) return next(err);
+        console.log(results)
+        // Gestione errore 404
+        if (results.affectedRows === 0) {
+            res.status(404).json({
+                error: 'Pizza not found'
+            })
+            return;
+        }
+    })
+
+    res.sendStatus(204)
 })
 
 module.exports = router;
