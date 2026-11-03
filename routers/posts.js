@@ -29,15 +29,26 @@ router.get('/:id', (req, res) => {
     const id = req.params.id;
 
     const sql = 'SELECT * FROM posts WHERE id=?'
+    const sqlTags = `SELECT tags.*
+    FROM tags
+    JOIN post_tag
+    ON post_tag.tag_id = tags.id
+    WHERE post_tag.post_id=?`
+
     connection.query(sql, [id], (err, results) => {
         if (err) next(err);
-        if (results.affectedRows === 0) {
+        if (results.length === 0) {
             res.status(404).json({
                 error: 'Post not found'
             })
             return;
         }
-        res.json(results[0]);
+        const tag = results[0];
+        connection.query(sqlTags, [id], (err, resTags) => {
+            if (err) next(err)
+                tag.labels = resTags;
+            res.json(tag);
+        })
     })
 })
 
@@ -62,7 +73,7 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res, next) => {
     const {id} = req.params;
 
-    const sql = `SELECT FROM posts WHERE id=?`;
+    const sql = 'DELETE FROM posts WHERE id=?';
     connection.query(sql, [id], (err, results) => {
         if (err) return next(err);
         // Gestione errore 404
@@ -72,9 +83,9 @@ router.delete('/:id', (req, res, next) => {
             })
             return;
         }
-    })
 
-    res.sendStatus(204)
+        res.sendStatus(204)
+    })
 })
 
 module.exports = router;
